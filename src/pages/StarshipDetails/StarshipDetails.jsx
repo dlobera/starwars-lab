@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { getDetails } from "../../services/sw-api";
-import { Link } from "react-router-dom";
+import PilotList from "../PilotList/PilotList";
 
 const StarshipDetails = () => {
   const [starshipDetails, setStarshipDetails] = useState({})
   const location = useLocation()
-  console.log(location.state.starship.url)
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -17,12 +16,24 @@ const StarshipDetails = () => {
   }, [location.state.starship.url])
 
   return (
-    <div>
-    <h1>NAME: {starshipDetails.name}</h1>
-    <h1>MODEL: {starshipDetails.model}</h1>
-    <Link to='/'>
-      RETURN
-      </Link>
+    <div className='all-starships'>
+      {starshipDetails.name ?
+      <>
+        <div className='starship-details'>
+          <h1>NAME: {starshipDetails.name}</h1>
+          <h1>MODEL: {starshipDetails.model}</h1>
+          {starshipDetails.pilots.length 
+            ? <PilotList pilots={starshipDetails.pilots}/>
+            : <h2>This ship has no pilots.</h2>
+          }
+          <Link to='/'>RETURN</Link>
+        </div>
+      </>
+      :
+      <>
+      <p>Loading starship details...</p>
+      </>
+      }
     </div>
   );
 }
